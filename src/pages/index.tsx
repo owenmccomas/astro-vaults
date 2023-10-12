@@ -4,19 +4,13 @@ import { SiteHeader } from "~/components/header";
 import { Button } from "@/components/ui/button";
 
 import { api } from "~/utils/api";
-import { Item, getRandomItem } from "../utils/crateLogic"; // Import the logic from crateLogic.ts
+import { type Item, getRandomItem } from "../utils/crateLogic"; // Import the logic from crateLogic.ts
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
   // Step 1: Create a state variable to hold the received item.
   const [receivedItem, setReceivedItem] = useState<Item | null>(null);
 
   // Step 2: Function to handle the button click and set the received item.
-  function handleOpenCrate() {
-    const item = getRandomItem();
-    setReceivedItem(item);
-  }
 
   function getColorForRarity(rarity: string) {
     switch (rarity) {
@@ -34,7 +28,13 @@ export default function Home() {
         return "text-gray-500"; // Default to gray for unknown rarities
     }
   }
-  
+
+  const crateHandler = api.example.getCrates.useMutation()
+
+
+  const generateRandomItemListWithSelectedItem = () => {
+    crateHandler.mutate();
+  };
 
   return (
     <>
@@ -45,25 +45,22 @@ export default function Home() {
       </Head>
       <SiteHeader />
       <main className="flex min-h-screen flex-col items-center justify-center">
-        {receivedItem && (
-          <div className="mb-2">
-            <p>
-              You received: {receivedItem.name} (
-              <span
-                className={`${getColorForRarity(
-                  receivedItem.rarity,
-                )} font-bold`}
-              >
-                {receivedItem.rarity}
-              </span>{" "}
-              rarity)
-            </p>
-          </div>
+        {crateHandler.data ? (
+          <>
+            {crateHandler.data.list.map((item: Item, index) => (
+              <div key={index} className="flex items-center justify-center flex-col bg-gray-200 rounded-xl p-3">
+                <div className=" font-bold">{item.name}</div>
+                <div className={getColorForRarity(item.rarity)}>{item.rarity}</div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <div className="text-2xl font-bold">Loading...</div>
         )}
 
         <button
-          onClick={handleOpenCrate}
-          className="rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-800"
+          onClick={generateRandomItemListWithSelectedItem}
+          className="rounded bg-black px-4 py-2 font-bold text-white hover-bg-gray-800"
         >
           Open AstroCrate
         </button>
