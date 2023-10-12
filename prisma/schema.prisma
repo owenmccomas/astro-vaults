@@ -41,15 +41,16 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  userId   String   @unique
 }
 
 model Item {
   id          String   @id @default(cuid())
   name        String
   rarity      ItemRarity
-  value       Int
+  value       Int 
   description String
-  userId      String
+  userId      String   @unique
   user        User     @relation(fields: [userId], references: [userId])
 }
 
