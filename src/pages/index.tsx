@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { useState } from "react"; // Import useState
 import { SiteHeader } from "~/components/header";
-import { Button } from "@/components/ui/button";
 
 import { api } from "~/utils/api";
 import { Item, getRandomItem } from "../utils/crateLogic"; // Import the logic from crateLogic.ts
