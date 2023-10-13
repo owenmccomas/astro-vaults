@@ -1,22 +1,33 @@
+import Link from "next/link";
 import { SiteHeader } from "~/components/header";
 import { Layout } from "~/layouts/Layout";
-
 
 const Home: React.FC = () => {
   return (
     <Layout>
       <SiteHeader />
-    <div className="bg-gradient-to-r from-astroOrange to-astroLightOrange h-screen flex flex-col items-center justify-center">
-      <img src="/favicon.ico" alt="AstroCrate Logo" className="w-64 h-64 mb-4 rounded-xl" />
+      <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-r from-astroOrange to-astroLightOrange">
+        <img
+          src="/favicon.ico"
+          alt="AstroCrate Logo"
+          className="mb-4 h-64 w-64 rounded-xl"
+        />
 
-      <h1 className="text-4xl text-astroDark font-raj-light mb-4">Welcome to AstroCrate</h1>
+        <h1 className="mb-4 text-4xl font-raj-light text-astroDark">
+          Welcome to AstroCrate
+        </h1>
 
-      <p className="text-lg text-astroDark mb-8">Your journey to the stars begins here!</p>
+        <p className="mb-8 text-lg text-astroDark">
+          Your journey to the stars begins here!
+        </p>
 
-      <button className="bg-astroDark text-white py-2 px-4 rounded-lg hover:bg-white hover:text-astroDark transition duration-300">
-        Get Started
-      </button>
-    </div>
+        <Link
+          href={"/drops"}
+          className="rounded-lg bg-astroDark font-bold px-4 py-2 text-white transition duration-300 hover:bg-white hover:text-astroDark"
+        >
+          Get Started
+        </Link>
+      </div>
     </Layout>
   );
 };
