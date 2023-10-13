@@ -251,7 +251,6 @@ const items: Item[] = [
   { name: "The Celestial Scribe's Quill", rarity: "legendary" },
   { name: "Eternal Nebula of Creation", rarity: "legendary" },
   { name: "The Cosmic Voyager's Journal", rarity: "legendary" },
-  // Add more items here.
 ];
 
 // Function to randomly select an item from the array based on rarity.
