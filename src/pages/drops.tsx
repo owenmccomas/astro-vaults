@@ -54,7 +54,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SiteHeader />
-      <Layout className="flex min-h-screen flex-col items-center justify-center">
+      <Layout className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-r from-astroOrange to-astroLightOrange">
         {crateHandler.data && (
           <div className="w-40">
           <h2>{crateHandler.data.item?.name}</h2>
