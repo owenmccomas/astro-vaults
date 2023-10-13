@@ -17,6 +17,12 @@ module.exports = {
     },
     extend: {
       colors: {
+        astroOrange: "#e45f44",
+        astroLightOrange: "#fdd664",
+        astroDark: "#15161a",
+        astroPurple: '#714f99',
+        astroGreen: '#97bfae',
+        astroYellow: '#f1c96f',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
