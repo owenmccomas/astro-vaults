@@ -1,38 +1,49 @@
 import Head from "next/head";
-import { useState } from "react"; // Import useState
 import { SiteHeader } from "~/components/header";
-
 import { api } from "~/utils/api";
-import { Item, getRandomItem } from "../utils/crateLogic"; // Import the logic from crateLogic.ts
+import { useSession } from "next-auth/react";
+import { Layout } from "~/layouts/Layout";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
-export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+const Home = () => {
 
-  // Step 1: Create a state variable to hold the received item.
-  const [receivedItem, setReceivedItem] = useState<Item | null>(null);
+  const crateHandler = api.crate.getCrate.useMutation();
+  const keepHandler = api.crate.keepCrate.useMutation();
 
-  // Step 2: Function to handle the button click and set the received item.
-  function handleOpenCrate() {
-    const item = getRandomItem();
-    setReceivedItem(item);
+  // function getColorForRarity(rarity: string) {
+  //   switch (rarity) {
+  //     case "common":
+  //       return "text-gray-500";
+  //     case "uncommon":
+  //       return "text-green-500";
+  //     case "rare":
+  //       return "text-blue-500";
+  //     case "epic":
+  //       return "text-purple-500";
+  //     case "legendary":
+  //       return "text-yellow-500";
+  //     default:
+  //       return "text-gray-500"; // Default to gray for unknown rarities
+  //   }
+  // }
+  const session = useSession();
+
+  const getCrate = () => {
+    crateHandler.mutate();
   }
 
-  function getColorForRarity(rarity: string) {
-    switch (rarity) {
-      case "common":
-        return "text-gray-500";
-      case "uncommon":
-        return "text-green-500";
-      case "rare":
-        return "text-blue-500";
-      case "epic":
-        return "text-purple-500";
-      case "legendary":
-        return "text-yellow-500";
-      default:
-        return "text-gray-500"; // Default to gray for unknown rarities
+  const keepCrate = () => {
+    if(crateHandler.data?.item && session?.data?.user) {
+      keepHandler.mutate({item: crateHandler.data.item as any, userId: session.data.user.id});
     }
   }
+
+  useEffect(() => {
+    if(keepHandler.isSuccess) {
+      toast
+    }
+  }, [keepHandler.isSuccess]);
   
 
   return (
@@ -43,30 +54,32 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SiteHeader />
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        {receivedItem && (
-          <div className="mb-2">
-            <p>
-              You received: {receivedItem.name} (
-              <span
-                className={`${getColorForRarity(
-                  receivedItem.rarity,
-                )} font-bold`}
-              >
-                {receivedItem.rarity}
-              </span>{" "}
-              rarity)
-            </p>
-          </div>
+      <Layout className="flex min-h-screen flex-col items-center justify-center">
+        {crateHandler.data && (
+          <div className="w-40">
+          <h2>{crateHandler.data.item?.name}</h2>
+          <p>Rarity: {crateHandler.data.item?.rarity}</p>
+          <p>Value: {crateHandler.data.item?.value}</p>
+          <p>Description: {crateHandler.data.item?.description}</p>
+          {crateHandler.data.item?.image && <img src={crateHandler.data.item?.image} alt={crateHandler.data.item?.name} />}
+        </div>
         )}
 
         <button
-          onClick={handleOpenCrate}
+          onClick={getCrate}
           className="rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-800"
         >
           Open AstroCrate
         </button>
-      </main>
+        <button
+          onClick={keepCrate}
+          className="rounded bg-black mt-1 px-4 py-2 font-bold text-white hover:bg-gray-800"
+        >
+          Keep AstroCrate
+        </button>
+      </Layout>
     </>
   );
 }
+
+export default Home;

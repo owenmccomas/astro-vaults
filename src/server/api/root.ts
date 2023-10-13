@@ -1,4 +1,4 @@
-import { exampleRouter } from "~/server/api/routers/example";
+import { crateRouter } from "~/server/api/routers/crate.router";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { inventoryRouter } from "./routers/inventory.router";
 
@@ -8,7 +8,7 @@ import { inventoryRouter } from "./routers/inventory.router";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
+  crate: crateRouter,
   inventory: inventoryRouter
 });
 
