@@ -18,6 +18,12 @@ module.exports = {
     },
     extend: {
       colors: {
+        astroOrange: "#e45f44",
+        astroLightOrange: "#fdd664",
+        astroDark: "#15161a",
+        astroPurple: '#714f99',
+        astroGreen: '#97bfae',
+        astroYellow: '#f1c96f',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -70,6 +76,16 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        rajdhana: ['Rajdhana', 'sans'],
+      },
+      fontWeight: {
+        'raj-light': '300',        // Rajdhana-Light
+        'raj-regular': '400',      // Rajdhana-Regular
+        'raj-medium': '500',       // Rajdhana-Medium
+        'raj-semibold': '600',     // Rajdhana-SemiBold
+        'raj-bold': '700',         // Rajdhana-Bold
       },
     },
   },

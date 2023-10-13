@@ -9,16 +9,26 @@ import { db } from "~/server/db";
 
 export const inventoryRouter = createTRPCRouter({
   getInventory: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(({ input }) => {
-      db.user.findFirst({ where: { id: input.userId }, include: { inventory: true } });
-    }),
+   .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+   .query(async ({ input }) => {
+      const inventory = await db.user.findUnique({
+        where: { id: input.id },
+        select: {
+          items: true,
+        },
+        
+      })
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.example.findMany();
-  }),
+      if (!inventory) {
+        throw new Error("Inventory not found");
+      }
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+      return inventory;
+    }
+  ),
+
 });

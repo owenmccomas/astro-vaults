@@ -41,7 +41,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  userId   String   @unique
+  items         Item[]
 }
 
 model Item {
@@ -50,8 +50,9 @@ model Item {
   rarity      ItemRarity
   value       Int 
   description String
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [userId])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  image       String?
 }
 
 model VerificationToken {

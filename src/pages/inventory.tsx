@@ -1,15 +1,12 @@
+import { Item, Session } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import React from 'react';
+import { InventoryList } from '~/components/Inventory';
+import { SiteHeader } from '~/components/header';
+import { Layout } from '~/layouts/Layout';
+import { api } from '~/utils/api';
 
-export type Item = {
-  name: string;
-  rarity: string;
-};
-
-interface InventoryProps {
-  items: Item[];
-}
-
-const Inventory: React.FC<InventoryProps> = ({ items }) => {
+const Inventory = ({ items }: {items: Item[]}) => {
   const getColorForRarity = (rarity: string) => {
     switch (rarity) {
       case 'common':
@@ -27,17 +24,18 @@ const Inventory: React.FC<InventoryProps> = ({ items }) => {
     }
   };
 
-  return (
-    <div className="inventory">
-      <h2>Your Inventory</h2>
-      <ul>
-        {items && items.map((item: Item, index: number) => (
-          <li key={index}>
-            {item.name} - <span className={getColorForRarity(item.rarity)}>{item.rarity}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+  const session = useSession();
+
+  const inventory = api.inventory.getInventory.useQuery({ id: session.data?.user.id!});
+  console.log(inventory.data)
+
+  if(inventory.data) return (
+    <Layout className='bg-gradient-to-br from-astroDark to-black'>
+      <SiteHeader />
+      <h2 className='text-2xl text-center'>Welcome to your Inventory, {session.data?.user.name?.split(' ')[0]}</h2>
+
+      <InventoryList userItems={inventory.data.items} />
+    </Layout>
   );
 };
 
