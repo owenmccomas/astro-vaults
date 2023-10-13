@@ -1,24 +1,25 @@
 import { api } from "~/utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  // SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export function SiteHeader() {
   const user = useSession().data?.user;
 
+  const getMoney = api.money.getUserMoney.useMutation();
+
+  useEffect(() => {
+    if (user) {
+      getMoney.mutate({userId: user.id});
+    }
+  }, [user]);
+
   return (
     <header className="sticky top-0 z-40 w-full bg-astroDark">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-        <div>
+        <Link
+        href='/drops'>
           <Image 
           src={'/favicon.ico'}
           width={60}
@@ -26,9 +27,10 @@ export function SiteHeader() {
           className="rounded-sm"
           alt='astrocratelogo'
           />
-        </div>
+        </Link>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
+            <p className="text-white">{getMoney.data && getMoney.data}</p>
             <Link href="/inventory" className="mt-1 mx-2 rounded-full bg-black px-5 py-3 font-bold text-white no-underline transition hover:bg-white hover:text-black">Inventory</Link>
             <AuthShowcase />
           </nav>

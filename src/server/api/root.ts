@@ -1,6 +1,7 @@
 import { crateRouter } from "~/server/api/routers/crate.router";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { inventoryRouter } from "./routers/inventory.router";
+import { moneyRouter } from "./routers/money.router";
 
 /**
  * This is the primary router for your server.
@@ -9,7 +10,8 @@ import { inventoryRouter } from "./routers/inventory.router";
  */
 export const appRouter = createTRPCRouter({
   crate: crateRouter,
-  inventory: inventoryRouter
+  inventory: inventoryRouter,
+  money: moneyRouter,
 });
 
 // export type definition of API
