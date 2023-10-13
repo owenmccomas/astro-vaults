@@ -42,6 +42,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   items         Item[]
+  money         Int       @default(10)
 }
 
 model Item {

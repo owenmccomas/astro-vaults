@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Layout } from "~/layouts/Layout";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { Button } from "~/components/ui/button";
 
 const Home = () => {
 
@@ -71,12 +72,11 @@ const Home = () => {
         >
           Open AstroCrate
         </button>
-        <button
+        <Button
           onClick={keepCrate}
-          className="rounded bg-black mt-1 px-4 py-2 font-bold text-white hover:bg-gray-800"
         >
           Keep AstroCrate
-        </button>
+        </Button>
       </Layout>
     </>
   );
