@@ -1,0 +1,21 @@
+.slot-machine-animation {
+    animation: slot-machine 4s ease-in-out forwards;
+  }
+  
+  @keyframes slot-machine {
+    0% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-100px); /* Adjust this value for your desired animation height */
+    }
+    50% {
+      transform: translateY(-200px); /* Adjust this value for your desired animation height */
+    }
+    75% {
+      transform: translateY(-300px); /* Adjust this value for your desired animation height */
+    }
+    100% {
+      transform: translateY(-400px); /* Adjust this value for your desired animation height */
+    }
+  }

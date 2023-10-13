@@ -1,16 +1,12 @@
 import Head from "next/head";
-import { useState } from "react"; // Import useState
+import { useState } from "react";
 import { SiteHeader } from "~/components/header";
 import { Button } from "@/components/ui/button";
-
 import { api } from "~/utils/api";
-import { type Item, getRandomItem } from "../utils/crateLogic"; // Import the logic from crateLogic.ts
+import { type Item, getRandomItem } from "../utils/crateLogic";
 
 export default function Home() {
-  // Step 1: Create a state variable to hold the received item.
   const [receivedItem, setReceivedItem] = useState<Item | null>(null);
-
-  // Step 2: Function to handle the button click and set the received item.
 
   function getColorForRarity(rarity: string) {
     switch (rarity) {
@@ -25,15 +21,25 @@ export default function Home() {
       case "legendary":
         return "text-yellow-500";
       default:
-        return "text-gray-500"; // Default to gray for unknown rarities
+        return "text-gray-500";
     }
   }
 
-  const crateHandler = api.example.getCrates.useMutation()
-
+  const crateHandler = api.example.getCrates.useMutation();
 
   const generateRandomItemListWithSelectedItem = () => {
     crateHandler.mutate();
+  
+    const items = document.querySelectorAll(".item-card");
+    items.forEach((item, index) => {
+      item.classList.add("slot-machine-animation");
+  
+      if (index === crateHandler.data?.list.length - 1) {
+        item.addEventListener("animationend", () => {
+          item.classList.remove("slot-machine-animation");
+        });
+      }
+    });
   };
 
   return (
@@ -48,9 +54,14 @@ export default function Home() {
         {crateHandler.data ? (
           <>
             {crateHandler.data.list.map((item: Item, index) => (
-              <div key={index} className="flex items-center justify-center flex-col bg-gray-200 rounded-xl p-3">
+              <div
+                key={index}
+                className="item-card flex flex-col items-center justify-center rounded-xl bg-gray-200 p-3"
+              >
                 <div className=" font-bold">{item.name}</div>
-                <div className={getColorForRarity(item.rarity)}>{item.rarity}</div>
+                <div className={getColorForRarity(item.rarity)}>
+                  {item.rarity}
+                </div>
               </div>
             ))}
           </>
@@ -60,7 +71,7 @@ export default function Home() {
 
         <button
           onClick={generateRandomItemListWithSelectedItem}
-          className="rounded bg-black px-4 py-2 font-bold text-white hover-bg-gray-800"
+          className="hover-bg-gray-800 rounded bg-black px-4 py-2 font-bold text-white"
         >
           Open AstroCrate
         </button>

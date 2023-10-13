@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 import { getRandomItem } from "~/utils/crateLogic";
 
-export const exampleRouter = createTRPCRouter({
+export const slotRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
