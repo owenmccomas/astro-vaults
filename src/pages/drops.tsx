@@ -1,16 +1,20 @@
+import React, { useState } from "react";
 import Head from "next/head";
 import { SiteHeader } from "~/components/header";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { Layout } from "~/layouts/Layout";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { Button } from "~/components/ui/button";
+import { ToastContainer, toast } from "react-toastify";
+import { Button, ButtonGroup } from "@nextui-org/button";
+import "react-toastify/dist/ReactToastify.css";
+import Modal from "~/components/modal";
 
 const Home = () => {
-
   const crateHandler = api.crate.getCrate.useMutation();
   const keepHandler = api.crate.keepCrate.useMutation();
+
+  const [showItemModal, setShowItemModal] = useState<boolean>(false);
 
   // function getColorForRarity(rarity: string) {
   //   switch (rarity) {
@@ -28,24 +32,39 @@ const Home = () => {
   //       return "text-gray-500"; // Default to gray for unknown rarities
   //   }
   // }
+
   const session = useSession();
+  const keepNotify = () =>
+    toast.success("AstroCrate Kept!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const getCrate = () => {
     crateHandler.mutate();
-  }
+  };
 
   const keepCrate = () => {
-    if(crateHandler.data?.item && session?.data?.user) {
-      keepHandler.mutate({item: crateHandler.data.item as any, userId: session.data.user.id});
+    if (crateHandler.data?.item && session?.data?.user) {
+      keepHandler.mutate({
+        item: crateHandler.data.item as any,
+        userId: session.data.user.id,
+      });
     }
-  }
+    keepNotify();
+  };
 
   useEffect(() => {
-    if(keepHandler.isSuccess) {
-      toast
+    if (keepHandler.isSuccess) {
+      toast;
     }
   }, [keepHandler.isSuccess]);
-  
 
   return (
     <>
@@ -55,31 +74,54 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SiteHeader />
-      <Layout className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-r from-astroOrange to-astroLightOrange">
-        {crateHandler.data && (
-          <div className="w-40">
-          <h2>{crateHandler.data.item?.name}</h2>
-          <p>Rarity: {crateHandler.data.item?.rarity}</p>
-          <p>Value: {crateHandler.data.item?.value}</p>
-          <p>Description: {crateHandler.data.item?.description}</p>
-          {crateHandler.data.item?.image && <img src={crateHandler.data.item?.image} alt={crateHandler.data.item?.name} />}
-        </div>
-        )}
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-r from-astroOrange to-astroLightOrange">
+        <Modal show={showItemModal} setShow={setShowItemModal}>
+          {crateHandler.data && (
+            <div className="w-40">
+              <h2>{crateHandler.data.item?.name}</h2>
+              <p>Rarity: {crateHandler.data.item?.rarity}</p>
+              <p>Value: {crateHandler.data.item?.value}</p>
+              <p>Description: {crateHandler.data.item?.description}</p>
+              {crateHandler.data.item?.image && (
+                <img
+                  src={crateHandler.data.item?.image}
+                  alt={crateHandler.data.item?.name}
+                />
+              )}
+              <button
+                className="mt-1 rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-800"
+                onClick={keepCrate}
+              >
+                Keep AstroCrate
+              </button>
+            </div>
+          )}
+        </Modal>
 
         <button
-          onClick={getCrate}
-          className="rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-800"
+          onClick={() => {
+            setShowItemModal(!showItemModal);
+            getCrate();
+          }}
+          className="mt-1 rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-800"
         >
           Open AstroCrate
         </button>
-        <Button
-          onClick={keepCrate}
-        >
-          Keep AstroCrate
-        </Button>
-      </Layout>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+      </div>
     </>
   );
-}
+};
 
 export default Home;

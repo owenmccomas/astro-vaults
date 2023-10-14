@@ -14,7 +14,7 @@ const Inventory = ({ items }: { items: Item[] }) => {
 
   if (inventory.data)
     return (
-      <Layout className='bg-gradient-to-br from-astroDark to-black'>
+      <div className='bg-gradient-to-br from-astroDark to-black'>
         <SiteHeader />
         <div className='flex flex-col items-center p-4 space-y-4'>
           <h2 className='text-2xl text-center'>
@@ -23,7 +23,7 @@ const Inventory = ({ items }: { items: Item[] }) => {
 
           <InventoryList userItems={inventory.data.items} />
         </div>
-      </Layout>
+      </div>
     );
 };
 
